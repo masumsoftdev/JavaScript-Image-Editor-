@@ -54,26 +54,26 @@ class CustomImageEditor {
                     <label>Font Style:</label>
                     <select id="fontStyle" class="form-control">
                         <!-- Add more options as needed -->
-                        <option value="Arial">Arial</option>
-                        <option value="Courier New">Courier New</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="Comic Sans MS">Comic Sans MS</option>
-                        <option value="Impact">Impact</option>
-                        <option value="Tahoma">Tahoma</option>
-                        <option value="Trebuchet MS">Trebuchet MS</option>
-                        <option value="Brush Script MT">Brush Script MT</option>
-                        <option value="Garamond">Garamond</option>
-                        <option value="Palatino">Palatino</option>
-                        <option value="Lucida Handwriting">Lucida Handwriting</option>
-                        <option value="Copperplate">Copperplate</option>
-                        <option value="Futura">Futura</option>
-                        <option value="Gill Sans">Gill Sans</option>
-                        <option value="Helvetica">Helvetica</option>
-                        <option value="Rockwell">Rockwell</option>
-                        <option value="Segoe Script">Segoe Script</option>
-                        <option value="Perpetua">Perpetua</option>
+                        <option value="Arial" style="font-family: Arial, sans-serif;">Arial</option>
+                        <option value="Courier New" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
+                        <option value="Georgia" style="font-family: Georgia, serif;">Georgia</option>
+                        <option value="Times New Roman" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+                        <option value="Verdana" style="font-family: Verdana, Geneva, sans-serif;">Verdana</option>
+                        <option value="Comic Sans MS" style="font-family: 'Comic Sans MS', cursive;">Comic Sans MS</option>
+                        <option value="Impact" style="font-family: Impact, Charcoal, sans-serif;">Impact</option>
+                        <option value="Tahoma" style="font-family: Tahoma, Geneva, sans-serif;">Tahoma</option>
+                        <option value="Trebuchet MS" style="font-family: 'Trebuchet MS', Helvetica, sans-serif;">Trebuchet MS</option>
+                        <option value="Brush Script MT" style="font-family: 'Brush Script MT', cursive;">Brush Script MT</option>
+                        <option value="Garamond" style="font-family: Garamond, serif;">Garamond</option>
+                        <option value="Palatino" style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">Palatino</option>
+                        <option value="Lucida Handwriting" style="font-family: 'Lucida Handwriting', 'Lucida Sans', 'Arial', sans-serif;">Lucida Handwriting</option>
+                        <option value="Copperplate" style="font-family: Copperplate, 'Copperplate Gothic Bold', fantasy;">Copperplate</option>
+                        <option value="Futura" style="font-family: Futura, 'Trebuchet MS', Arial, sans-serif;">Futura</option>
+                        <option value="Gill Sans" style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif;">Gill Sans</option>
+                        <option value="Helvetica" style="font-family: Helvetica, Arial, sans-serif;">Helvetica</option>
+                        <option value="Rockwell" style="font-family: Rockwell, 'Courier Bold', serif;">Rockwell</option>
+                        <option value="Segoe Script" style="font-family: 'Segoe Script', 'Segoe UI', Arial, sans-serif;">Segoe Script</option>
+                        <option value="Perpetua" style="font-family: Perpetua, 'Palatino Linotype', 'Book Antiqua', serif;">Perpetua</option>
                     </select>
                 </div>
                 <div class="col">
