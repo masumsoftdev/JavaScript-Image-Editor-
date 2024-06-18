@@ -3,7 +3,7 @@
  * Plugin Name: Custom Image Editor
  * Description: A custom image editor allowing users to upload, edit, crop, and download images.
  * Version: 1.0
- * Author: Your Name
+ * Author: Masum Billah 
  */
 
 if (!defined('ABSPATH')) {
@@ -19,13 +19,13 @@ class CustomImageEditor {
 
     public function enqueue_scripts() {
         wp_enqueue_script('jquery');
-        wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js', array('jquery'), '4.5.2', true);
-        wp_enqueue_script('fabric-js', 'https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js', array(), '5.3.1', true);
-        wp_enqueue_script('cropper-js', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js', array(), '1.5.12', true);
-        wp_enqueue_script('file-saver-js', 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js', array(), '2.0.5', true);
-        wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css', array(), '4.5.2');
-        wp_enqueue_style('fontawesome-css', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', array(), '5.15.4');
-        wp_enqueue_style('cropper-css', 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css', array(), '1.5.12');
+        wp_enqueue_script('bootstrap-js',plugin_dir_url(__FILE__) . 'assets/js/bootstrap.min.js', array('jquery'), '4.5.2', true);
+        wp_enqueue_script('fabric-js', plugin_dir_url(__FILE__) . 'assets/js/fabric.min.js', array(), time(), true);
+        wp_enqueue_script('cropper-js', plugin_dir_url(__FILE__) . 'assets/js/cropper.min.js', array(), time(), true);
+        wp_enqueue_script('file-saver-js', plugin_dir_url(__FILE__) . 'assets/js/FileSaver.min.js', array(), time(), true);
+        wp_enqueue_style('bootstrap-css', plugin_dir_url(__FILE__) .'assets/css/bootstrap.min.css', array(), time(), 'all');
+        wp_enqueue_style('fontawesome-css', plugin_dir_url(__FILE__) . 'assets/css/all.min.css', array(), time(), 'all');
+        wp_enqueue_style('cropper-css', plugin_dir_url(__FILE__) . 'assets/css/cropper.min.css', array(), time(), 'all');
         wp_enqueue_style('editor-css', plugins_url('style.css', __FILE__));
     }
 
