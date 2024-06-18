@@ -14,7 +14,6 @@
 #canvas-container, #cropper-container {
     position: relative;
     width: 100%;
-    max-width: 800px;
     margin: auto;
 }
 
@@ -25,4 +24,11 @@ canvas {
 
 #cropper-container img {
     max-width: 100%;
+}
+
+#toast-container {
+    z-index: 10000;
+}
+#toast-container .toast-title, #toast-container .toast-message{
+    color: #000 !important;
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Custom Image Editor
- * Description: A custom image editor allowing users to upload, edit, crop, and download images.
+ * Description: A custom image editor allowing users to upload, edit, and download images.
  * Version: 1.0
  * Author: Masum Billah 
  */
@@ -19,12 +19,14 @@ class CustomImageEditor {
 
     public function enqueue_scripts() {
         wp_enqueue_script('jquery');
+        wp_enqueue_script('toastr-js', 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js', array(), '2.1.4', true);
+        wp_enqueue_style('toastr-css', 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css', array(), '2.1.4');
+
         wp_enqueue_script('bootstrap-js',plugin_dir_url(__FILE__) . 'assets/js/bootstrap.min.js', array('jquery'), '4.5.2', true);
         wp_enqueue_script('fabric-js', plugin_dir_url(__FILE__) .'assets/js/fabric.min.js', array(), '5.3.1', true);
-        wp_enqueue_script('cropper-js', plugin_dir_url(__FILE__) .'assets/js/cropper.min.js', array(), '1.5.12', true);
         wp_enqueue_style('bootstrap-css', plugin_dir_url(__FILE__) .'assets/css/bootstrap.min.css', array(), '4.5.2');
         wp_enqueue_style('fontawesome-css', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', array(), '5.15.4');
-        wp_enqueue_style('cropper-css', plugin_dir_url(__FILE__) .'assets/css/cropper.min.css', array(), '1.5.12');
+        wp_enqueue_script('editor-js', plugins_url('app.js', __FILE__));
         wp_enqueue_style('editor-css', plugins_url('style.css', __FILE__));
     }
 
@@ -34,15 +36,14 @@ class CustomImageEditor {
         <div id="image-editor" class="container">
             <div class="row mb-3">
                 <div class="col">
+                    <label for="imageUpload">Upload an Image</label>
                     <input type="file" id="imageUpload" class="form-control-file" accept="image/*">
                 </div>
             </div>
             <div class="row mb-3" id="editor-controls">
                 <div class="col">
                     <button id="addText" class="btn btn-primary"><i class="fas fa-font"></i> Add Text</button>
-                    <button id="cropImage" class="btn btn-warning"><i class="fas fa-crop-alt"></i> Crop</button>
                     <button id="undoAction" class="btn btn-danger"><i class="fas fa-undo"></i> Undo</button>
-                    <button id="downloadImage" class="btn btn-success"><i class="fas fa-download"></i> Download</button>
                 </div>
             </div>
             <div class="row mb-3">
@@ -57,7 +58,7 @@ class CustomImageEditor {
                         <option value="Arial" style="font-family: Arial, sans-serif;">Arial</option>
                         <option value="Courier New" style="font-family: 'Courier New', Courier, monospace;">Courier New</option>
                         <option value="Georgia" style="font-family: Georgia, serif;">Georgia</option>
-                        <option value="Times New Roman" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
+                        <option selected value="Times New Roman" style="font-family: 'Times New Roman', Times, serif;">Times New Roman</option>
                         <option value="Verdana" style="font-family: Verdana, Geneva, sans-serif;">Verdana</option>
                         <option value="Comic Sans MS" style="font-family: 'Comic Sans MS', cursive;">Comic Sans MS</option>
                         <option value="Impact" style="font-family: Impact, Charcoal, sans-serif;">Impact</option>
@@ -99,7 +100,7 @@ class CustomImageEditor {
                     <input type="color" id="fontColor" class="form-control" value="#000000">
                 </div>
                 <div class="col">
-                    <label>Text Background:</label>
+                    <label>Background:</label>
                     <input type="color" id="textBackgroundColor" class="form-control" value="#FFFFFF">
                     <button id="transparentBackground" class="btn btn-secondary mt-2">Transparent</button>
                 </div>
@@ -108,138 +109,15 @@ class CustomImageEditor {
                 <div class="col" id="canvas-container">
                     <canvas id="imageCanvas"></canvas>
                 </div>
-                <div class="col" id="cropper-container" style="display:none;">
-                    <img id="cropperImage">
-                    <button id="cropButton" class="btn btn-primary">Crop</button>
+            </div>
+            <div class="row mt-3" id="editor-controls">
+                <div class="col">
+                    <button id="downloadImage" class="btn btn-success"><i class="fas fa-download"></i> Download</button>
+                    <button class="btn btn-info share-btn" data-social="copy-link"><i class="fas fa-copy"></i> Copy Link</button>
                 </div>
             </div>
         </div>
-        <script>
-            jQuery(document).ready(function($) {
-                const canvas = new fabric.Canvas('imageCanvas');
-                let cropper;
-                const stateHistory = [];
-
-                const saveState = () => {
-                    stateHistory.push(JSON.stringify(canvas));
-                };
-
-                const removeObject = (object) => {
-                    canvas.remove(object);
-                    saveState();
-                };
-
-                $('#imageUpload').on('change', function(e) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        fabric.Image.fromURL(event.target.result, function(img) {
-                            canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-                                scaleX: canvas.width / img.width,
-                                scaleY: canvas.height / img.height
-                            });
-                            saveState();
-                        });
-                    }
-                    reader.readAsDataURL(e.target.files[0]);
-                });
-
-                $('#addText').on('click', function() {
-                    const textSize = $('#textSize').val();
-                    const fontStyle = $('#fontStyle').val();
-                    const fontWeight = $('#fontWeight').val();
-                    const fontColor = $('#fontColor').val();
-                    const textBackgroundColor = $('#textBackgroundColor').val();
-
-                    const text = new fabric.IText('Sample Text', {
-                        left: 50,
-                        top: 50,
-                        fontFamily: fontStyle,
-                        fontWeight: fontWeight,
-                        fill: fontColor,
-                        fontSize: parseInt(textSize),
-                        backgroundColor: textBackgroundColor
-                    });
-
-                    canvas.add(text);
-                    canvas.setActiveObject(text);
-                    saveState();
-                });
-
-                $('#textSize, #fontStyle, #fontWeight, #fontColor, #textBackgroundColor').on('input change', function() {
-                    const activeObject = canvas.getActiveObject();
-                    if (activeObject && activeObject.type === 'i-text') {
-                        activeObject.set({
-                            fontSize: parseInt($('#textSize').val()),
-                            fontFamily: $('#fontStyle').val(),
-                            fontWeight: $('#fontWeight').val(),
-                            fill: $('#fontColor').val(),
-                            backgroundColor: $('#textBackgroundColor').val()
-                        });
-                        canvas.renderAll();
-                        saveState();
-                    }
-                });
-
-                $('#transparentBackground').on('click', function() {
-                    const activeObject = canvas.getActiveObject();
-                    if (activeObject && activeObject.type === 'i-text') {
-                        activeObject.set('backgroundColor', 'transparent');
-                        canvas.renderAll();
-                        saveState();
-                    }
-                });
-
-                $('#cropImage').on('click', function() {
-                    const dataURL = canvas.toDataURL();
-                    $('#cropperImage').attr('src', dataURL);
-                    $('#canvas-container').hide();
-                    $('#cropper-container').show();
-                    cropper = new Cropper(document.getElementById('cropperImage'), {
-                        aspectRatio: NaN
-                    });
-                });
-
-                $('#cropButton').on('click', function() {
-                    const croppedCanvas = cropper.getCroppedCanvas();
-                    const croppedImage = croppedCanvas.toDataURL();
-                    fabric.Image.fromURL(croppedImage, function(img) {
-                        canvas.clear();
-                        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-                            scaleX: canvas.width / img.width,
-                            scaleY: canvas.height / img.height
-                        });
-                        saveState();
-                    });
-                    $('#canvas-container').show();
-                    $('#cropper-container').hide();
-                    cropper.destroy();
-                });
-
-                $('#downloadImage').on('click', function() {
-                    var dataURL = canvas.toDataURL('image/png'); // Other options: 'image/jpeg' for JPEG format
-
-                    // Create a temporary anchor element
-                    var link = document.createElement('a');
-                    link.download = 'canvas-image.png'; // Set the file name
-                    link.href = dataURL;
-
-                    // Trigger the download
-                    document.body.appendChild(link); // Append the anchor element to the DOM
-                    link.click(); // Programmatically click the download link
-
-                    // Clean up
-                    document.body.removeChild(link);
-                                    });
-
-                $('#undoAction').on('click', function() {
-                    if (stateHistory.length > 1) {
-                        stateHistory.pop();
-                        const previousState = stateHistory[stateHistory.length - 1];
-                        canvas.loadFromJSON(previousState, canvas.renderAll.bind(canvas));
-                    }
-                });
-            });
-        </script>
+       
         <?php
         return ob_get_clean();
     }
