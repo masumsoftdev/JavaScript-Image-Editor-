@@ -20,12 +20,11 @@ class CustomImageEditor {
     public function enqueue_scripts() {
         wp_enqueue_script('jquery');
         wp_enqueue_script('bootstrap-js',plugin_dir_url(__FILE__) . 'assets/js/bootstrap.min.js', array('jquery'), '4.5.2', true);
-        wp_enqueue_script('fabric-js', plugin_dir_url(__FILE__) . 'assets/js/fabric.min.js', array(), time(), true);
-        wp_enqueue_script('cropper-js', plugin_dir_url(__FILE__) . 'assets/js/cropper.min.js', array(), time(), true);
-        wp_enqueue_script('file-saver-js', plugin_dir_url(__FILE__) . 'assets/js/FileSaver.min.js', array(), time(), true);
-        wp_enqueue_style('bootstrap-css', plugin_dir_url(__FILE__) .'assets/css/bootstrap.min.css', array(), time(), 'all');
-        wp_enqueue_style('fontawesome-css', plugin_dir_url(__FILE__) . 'assets/css/all.min.css', array(), time(), 'all');
-        wp_enqueue_style('cropper-css', plugin_dir_url(__FILE__) . 'assets/css/cropper.min.css', array(), time(), 'all');
+        wp_enqueue_script('fabric-js', plugin_dir_url(__FILE__) .'assets/js/fabric.min.js', array(), '5.3.1', true);
+        wp_enqueue_script('cropper-js', plugin_dir_url(__FILE__) .'assets/js/cropper.min.js', array(), '1.5.12', true);
+        wp_enqueue_style('bootstrap-css', plugin_dir_url(__FILE__) .'assets/css/bootstrap.min.css', array(), '4.5.2');
+        wp_enqueue_style('fontawesome-css', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css', array(), '5.15.4');
+        wp_enqueue_style('cropper-css', plugin_dir_url(__FILE__) .'assets/css/cropper.min.css', array(), '1.5.12');
         wp_enqueue_style('editor-css', plugins_url('style.css', __FILE__));
     }
 
@@ -217,10 +216,20 @@ class CustomImageEditor {
                 });
 
                 $('#downloadImage').on('click', function() {
-                    canvas.toBlob(function(blob) {
-                        saveAs(blob, 'edited-image.png');
-                    });
-                });
+                    var dataURL = canvas.toDataURL('image/png'); // Other options: 'image/jpeg' for JPEG format
+
+                    // Create a temporary anchor element
+                    var link = document.createElement('a');
+                    link.download = 'canvas-image.png'; // Set the file name
+                    link.href = dataURL;
+
+                    // Trigger the download
+                    document.body.appendChild(link); // Append the anchor element to the DOM
+                    link.click(); // Programmatically click the download link
+
+                    // Clean up
+                    document.body.removeChild(link);
+                                    });
 
                 $('#undoAction').on('click', function() {
                     if (stateHistory.length > 1) {
