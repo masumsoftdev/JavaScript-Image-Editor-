@@ -1,5 +1,19 @@
 
 jQuery(document).ready(function($) {
+
+    // Popup Editor
+
+    // Open the popup
+    $('#openEditor').click(function() {
+        $('#imageEditorModal').modal('show');
+    });
+
+    // Close the popup
+    $('.close').click(function() {
+        $('#imageEditorModal').modal('hide');
+    });
+
+
     const canvas = new fabric.Canvas('imageCanvas');
     let cropper;
     const stateHistory = [];

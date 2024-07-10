@@ -32,3 +32,8 @@ canvas {
 #toast-container .toast-title, #toast-container .toast-message{
     color: #000 !important;
 }
+
+.modal-header .close:hover{
+    color: #fff;
+    background-color: #000;
+}
